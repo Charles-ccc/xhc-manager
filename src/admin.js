@@ -2,20 +2,23 @@ import React, {Component} from 'react'
 import { Row, Col } from 'antd'
 import Header from './components/Header'
 import Footer from './components/Footer'
-
+import NavLeft from './components/NavLeft'
+import './styles/common.less'
 export default class Admin extends Component {
 
   render() {
     return (
-      <Row>
-        <Col span="3">
-          left
+      <Row className="container">
+        <Col span={3} className="nav-left">
+          <NavLeft/>
         </Col>
-        <Col span="21">
+        <Col span={21} className="main">
           <Header>
             Header
           </Header>
-          <Row>contant</Row>
+          <Row className="content">
+            contant
+          </Row>
           <Footer>
             footer
           </Footer>
