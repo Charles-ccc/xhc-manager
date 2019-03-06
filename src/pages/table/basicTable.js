@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import { Card, Table, Modal, Button, message } from 'antd';
 import axios from './../../axios/index'
-import Utils from './../../utils/utils';
+// import axios from 'axios'
+import Utils from './../../utils/util';
 export default class BasicTable extends Component {
 
 	state = {
+		dataSource: [],
 		dataSource2: []
 	}
 
@@ -16,38 +18,38 @@ export default class BasicTable extends Component {
 		const data = [
 			{
 				id: '0',
-				userName: 'Jack',
+				userName: 'Charles',
 				sex: '1',
 				state: '1',
-				interest: '1',
-				birthday: '2000-01-01',
-				address: '北京市海淀区奥林匹克公园',
+				interest: '2',
+				birthday: '2019-03-06',
+				address: '深圳市龙华区民治街道碧水龙庭',
 				time: '09:00'
 			},
 			{
 				id: '1',
 				userName: 'Tom',
 				sex: '1',
-				state: '1',
-				interest: '1',
-				birthday: '2000-01-01',
-				address: '北京市海淀区奥林匹克公园',
+				state: '2',
+				interest: '6',
+				birthday: '2019-03-06',
+				address: '深圳市龙华区民治街道碧水龙庭',
 				time: '09:00'
 			},
 			{
 				id: '2',
 				userName: 'Lily',
 				sex: '1',
-				state: '1',
-				interest: '1',
-				birthday: '2000-01-01',
-				address: '北京市海淀区奥林匹克公园',
+				state: '3',
+				interest: '8',
+				birthday: '2019-03-06',
+				address: '深圳市龙华区民治街道碧水龙庭',
 				time: '09:00'
-			},
+			}
 		]
-		data.map((item, index) => {
-			item.key = index;
-		})
+		// data.map((item, index) => {
+		// 	item.key = index;
+		// })
 		this.setState({
 			dataSource: data
 		})
@@ -65,18 +67,19 @@ export default class BasicTable extends Component {
 				}
 			}
 		}).then((res) => {
-			if (res.code == 0) {
-				res.result.list.map((item, index) => {
-					item.key = index;
+			if (res.code === 0) {
+				const list = res.result.list
+				list.map((item, index) => {
+					item.key = index
 				})
 				this.setState({
-					dataSource2: res.result.list,
-					selectedRowKeys: [],
-					selectedRows: null,
-					pagination: Utils.pagination(res, (current) => {
-						_this.params.page = current;
-						this.request();
-					})
+					dataSource2: list,
+				// 	selectedRowKeys: [],
+				// 	selectedRows: null,
+				// 	pagination: Utils.pagination(res, (current) => {
+				// 		_this.params.page = current;
+				// 		this.request();
+				// 	})
 				})
 			}
 		})
@@ -114,9 +117,9 @@ export default class BasicTable extends Component {
 	render() {
 		const columns = [
 			{
-				title: 'id',
+				title: 'id', // 表头
 				key: 'id',
-				dataIndex: 'id'
+				dataIndex: 'id' // 字段
 			},
 			{
 				title: '用户名',
@@ -128,7 +131,7 @@ export default class BasicTable extends Component {
 				key: 'sex',
 				dataIndex: 'sex',
 				render(sex) {
-					return sex == 1 ? '男' : '女'
+					return sex === '1' ? '男' : '女'
 				}
 			},
 			{
@@ -137,11 +140,11 @@ export default class BasicTable extends Component {
 				dataIndex: 'state',
 				render(state) {
 					let config = {
-						'1': '咸鱼一条',
-						'2': '风华浪子',
-						'3': '北大才子',
-						'4': '百度FE',
-						'5': '创业者'
+						'1': '瓦片捡拾者',
+						'2': '前端搬砖工',
+						'3': '蓝凌FE',
+						'4': '深入学习中',
+						'5': '未来创业者'
 					}
 					return config[state];
 				}
@@ -159,7 +162,7 @@ export default class BasicTable extends Component {
 						'5': '爬山',
 						'6': '骑行',
 						'7': '桌球',
-						'8': '麦霸'
+						'8': '泡妞'
 					}
 					return config[abc];
 				}
@@ -203,6 +206,7 @@ export default class BasicTable extends Component {
 						columns={columns}
 						dataSource={this.state.dataSource}
 						pagination={false}
+						rowKey={record => record.id}
 					/>
 				</Card>
 				<Card title="动态数据渲染表格-Mock" style={{ margin: '10px 0' }}>
@@ -211,6 +215,7 @@ export default class BasicTable extends Component {
 						columns={columns}
 						dataSource={this.state.dataSource2}
 						pagination={false}
+						rowKey={record => record.id}
 					/>
 				</Card>
 				<Card title="Mock-单选" style={{ margin: '10px 0' }}>
@@ -227,6 +232,7 @@ export default class BasicTable extends Component {
 						columns={columns}
 						dataSource={this.state.dataSource2}
 						pagination={false}
+						rowKey={record => record.id}
 					/>
 				</Card>
 				<Card title="Mock-单选" style={{ margin: '10px 0' }}>
@@ -239,6 +245,7 @@ export default class BasicTable extends Component {
 						columns={columns}
 						dataSource={this.state.dataSource2}
 						pagination={false}
+						rowKey={record => record.id}
 					/>
 				</Card>
 				<Card title="Mock-表格分页" style={{ margin: '10px 0' }}>
@@ -247,6 +254,7 @@ export default class BasicTable extends Component {
 						columns={columns}
 						dataSource={this.state.dataSource2}
 						pagination={this.state.pagination}
+						rowKey={record => record.id}
 					/>
 				</Card>
 			</div>
