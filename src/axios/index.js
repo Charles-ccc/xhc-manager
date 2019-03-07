@@ -17,31 +17,33 @@ export default class Axiox {
 	}
 	static ajax(options) {
 		let loading;
-		// if (options.data && options.data.isShowLoading !== false) {
-		// 	loading = document.getElementById('ajaxLoading');
-		// 	loading.style.display = 'block';
-		// }
-		const baseApi = 'https://www.easy-mock.com/mock/5c7fd1d58cfae820245a9a92/xhcmanager';
+		if (options.data && options.data.isShowLoading !== false) {
+			loading = document.getElementById('ajaxLoading');
+			loading.style.display = 'block';
+		}
+		// const baseApi = 'https://www.easy-mock.com/mock/5c7fd1d58cfae820245a9a92/xhcmanager';
+		const baseApi = 'https://www.easy-mock.com/mock/5a7278e28d0c633b9c4adbd7/api';
+
 		return new Promise((resolve, reject) => {
 			axios({
 				url: options.url,
 				method: 'get',
 				baseURL: baseApi,
-				timeout: 5000,
+				timeout: 600000,
 				params: (options.data && options.data.params) || ''
 			}).then((response) => {
-				// if (options.data && options.data.isShowLoading !== false) {
-				// 	loading = document.getElementById('ajaxLoading');
-				// 	loading.style.display = 'none';
-				// }
+				if (options.data && options.data.isShowLoading !== false) {
+					loading = document.getElementById('ajaxLoading');
+					loading.style.display = 'none';
+				}
 				if (response.status === 200) {
 					const res = response.data;
-					if (res.code === 0) {
+					if (res.code == '0') {
 						resolve(res);
 					} else {
 						Modal.info({
 							title: "提示",
-							content: res.massage
+							content: "数据返回有误"
 						})
 					}
 				} else {

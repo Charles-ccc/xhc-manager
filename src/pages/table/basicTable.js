@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import { Card, Table, Modal, Button, message } from 'antd';
 import axios from './../../axios/index'
-// import axios from 'axios'
 import Utils from './../../utils/util';
 export default class BasicTable extends Component {
 
 	state = {
 		dataSource: [],
-		dataSource2: []
+		dataSource2: [],
+		selectedRowKeys: []
 	}
 
 	params = {
@@ -19,7 +19,7 @@ export default class BasicTable extends Component {
 			{
 				id: '0',
 				userName: 'Charles',
-				sex: '1',
+				sex: 1,
 				state: '1',
 				interest: '2',
 				birthday: '2019-03-06',
@@ -29,7 +29,7 @@ export default class BasicTable extends Component {
 			{
 				id: '1',
 				userName: 'Tom',
-				sex: '1',
+				sex: 1,
 				state: '2',
 				interest: '6',
 				birthday: '2019-03-06',
@@ -39,7 +39,7 @@ export default class BasicTable extends Component {
 			{
 				id: '2',
 				userName: 'Lily',
-				sex: '1',
+				sex: 2,
 				state: '3',
 				interest: '8',
 				birthday: '2019-03-06',
@@ -47,9 +47,9 @@ export default class BasicTable extends Component {
 				time: '09:00'
 			}
 		]
-		// data.map((item, index) => {
-		// 	item.key = index;
-		// })
+		data.map((item, index) => {
+			item.key = index;
+		})
 		this.setState({
 			dataSource: data
 		})
@@ -64,7 +64,8 @@ export default class BasicTable extends Component {
 			data: {
 				params: {
 					page: this.params.page
-				}
+				},
+				// isShowLoading: false // 控制不显示loading效果
 			}
 		}).then((res) => {
 			if (res.code === 0) {
@@ -74,25 +75,26 @@ export default class BasicTable extends Component {
 				})
 				this.setState({
 					dataSource2: list,
-				// 	selectedRowKeys: [],
-				// 	selectedRows: null,
-				// 	pagination: Utils.pagination(res, (current) => {
-				// 		_this.params.page = current;
-				// 		this.request();
-				// 	})
+					selectedRowKeys: [],
+					selectedRows: null,
+					pagination: Utils.pagination(res, (current) => {
+						_this.params.page = current;
+						this.request();
+					})
 				})
 			}
 		})
 	}
 
 	onRowClick = (record, index) => {
-		let selectKey = [index];
+		const selectKey = [index];
+		console.log("selectKey",selectKey)
 		Modal.info({
 			title: '信息',
-			content: `用户名：${record.userName},用户爱好：${record.interest}`
+			content: `用户名：${record.userName}，用户状态：${record.state}，用户爱好：${record.interest}`
 		})
 		this.setState({
-			selectedRowKeys: selectKey,
+			selectedRowKeys: selectKey,  // 当前选中行
 			selectedItem: record
 		})
 	}
@@ -131,7 +133,7 @@ export default class BasicTable extends Component {
 				key: 'sex',
 				dataIndex: 'sex',
 				render(sex) {
-					return sex === '1' ? '男' : '女'
+					return sex === 1 ? '男' : '女'
 				}
 			},
 			{
@@ -183,7 +185,7 @@ export default class BasicTable extends Component {
 				dataIndex: 'time'
 			}
 		]
-		const selectedRowKeys = this.state.selectedRowKeys;
+		const { selectedRowKeys } = this.state;
 		const rowSelection = {
 			type: 'radio',
 			selectedRowKeys
@@ -206,7 +208,6 @@ export default class BasicTable extends Component {
 						columns={columns}
 						dataSource={this.state.dataSource}
 						pagination={false}
-						rowKey={record => record.id}
 					/>
 				</Card>
 				<Card title="动态数据渲染表格-Mock" style={{ margin: '10px 0' }}>
@@ -221,8 +222,8 @@ export default class BasicTable extends Component {
 				<Card title="Mock-单选" style={{ margin: '10px 0' }}>
 					<Table
 						bordered
-						rowSelection={rowSelection}
-						onRow={(record, index) => {
+						rowSelection={rowSelection}  // 判断单选还是多选
+						onRow={(record, index) => {  // 控制行事件
 							return {
 								onClick: () => {
 									this.onRowClick(record, index);
@@ -232,10 +233,9 @@ export default class BasicTable extends Component {
 						columns={columns}
 						dataSource={this.state.dataSource2}
 						pagination={false}
-						rowKey={record => record.id}
 					/>
 				</Card>
-				<Card title="Mock-单选" style={{ margin: '10px 0' }}>
+				<Card title="Mock-多选" style={{ margin: '10px 0' }}>
 					<div style={{ marginBottom: 10 }}>
 						<Button onClick={this.handleDelete}>删除</Button>
 					</div>
@@ -245,7 +245,6 @@ export default class BasicTable extends Component {
 						columns={columns}
 						dataSource={this.state.dataSource2}
 						pagination={false}
-						rowKey={record => record.id}
 					/>
 				</Card>
 				<Card title="Mock-表格分页" style={{ margin: '10px 0' }}>
@@ -254,7 +253,6 @@ export default class BasicTable extends Component {
 						columns={columns}
 						dataSource={this.state.dataSource2}
 						pagination={this.state.pagination}
-						rowKey={record => record.id}
 					/>
 				</Card>
 			</div>
