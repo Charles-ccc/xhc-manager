@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Button, Table, Form, Select, Modal } from 'antd';
+import { Card, Button, Table, Form, Select, Modal, message } from 'antd';
 import axios from './../../axios/index';
 import Utils from './../../utils/util';
 const FormItem = Form.Item;
@@ -50,9 +50,45 @@ export default class City extends Component {
       isShowOpenCity: true
     })
   }
+  _getCity(city) {
+    let text
+    console.log(city)
+    switch(city) {
+      case "1":
+        text= '北京市'
+        break
+      case "2":
+        text= '武汉市'
+        break
+      case "3":
+        text= '深圳市'
+        break
+      default:
+        text= '全部城市'
+    }
+    return text
+  }
   // 城市开通
   handleSubmit = () => {
-    console.log(this.cityForm)
+    const cityInfo = this.cityForm.props.form.getFieldsValue()
+    console.log(cityInfo)
+    const cityId = cityInfo.city_id
+    const cityName = this._getCity(cityId)  
+    axios.ajax({
+      url: '/city/open',
+      data: {
+        params: cityInfo
+      }
+    }).then((res) => {
+      console.log(res)
+      if(res.code == '0') {
+        message.success(`${cityName}开通成功`)
+        this.setState({
+          isShowOpenCity: false
+        })
+        this.requestList()
+      }
+    })
   }
   render() {
     const columns = [
@@ -144,7 +180,7 @@ class FilterForm extends Component {
               >
                 <Option value="">全部</Option>
                 <Option value="1">北京市</Option>
-                <Option value="2">天津市</Option>
+                <Option value="2">武汉市</Option>
                 <Option value="3">深圳市</Option>
               </Select>
             )
@@ -223,7 +259,8 @@ class OpenCityForm extends Component {
               <Select style={{ width: 150 }}>
                 <Option value="">全部</Option>
                 <Option value="1">北京市</Option>
-                <Option value="2">天津市</Option>
+                <Option value="2">武汉市</Option>
+                <Option value="3">深圳市</Option>
               </Select>
             )
           }

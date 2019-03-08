@@ -1,71 +1,71 @@
 const menuList = [
   {
       title:'首页',
-      key:'/admin/home'
+      key:'/home'
   },
   {
     title:'UI',
-    key:'/admin/ui',
+    key:'/ui',
     children:[
         {
             title:'按钮',
-            key:'/admin/ui/buttons',
+            key:'/ui/buttons',
         },
         {
             title:'弹框',
-            key:'/admin/ui/modals',
+            key:'/ui/modals',
         },
         {
             title:'Loading',
-            key:'/admin/ui/loadings',
+            key:'/ui/loadings',
         },
         {
             title:'通知提醒',
-            key:'/admin/ui/notification',
+            key:'/ui/notification',
         },
         {
             title:'全局Message',
-            key:'/admin/ui/messages',
+            key:'/ui/messages',
         },
         {
             title:'Tab页签',
-            key:'/admin/ui/tabs',
+            key:'/ui/tabs',
         },
         {
             title:'图片画廊',
-            key:'/admin/ui/gallery',
+            key:'/ui/gallery',
         },
         {
             title:'轮播图',
-            key:'/admin/ui/carousel',
+            key:'/ui/carousel',
         }
     ]
   },
   {
       title:'表单',
-      key:'/admin/form',
+      key:'/form',
       children:[
           {
               title:'登录',
-              key:'/admin/form/login',
+              key:'/form/login',
           },
           {
               title:'注册',
-              key:'/admin/form/register',
+              key:'/form/register',
           }
       ]
   },
   {
       title:'表格',
-      key:'/admin/table',
+      key:'/table',
       children:[
           {
               title:'基础表格',
-              key:'/admin/table/basic',
+              key:'/table/basic',
           },
           {
               title:'高级表格',
-              key:'/admin/table/high',
+              key:'/table/high',
           }
       ]
   },
@@ -75,7 +75,7 @@ const menuList = [
   },
   {
       title:'城市管理',
-      key:'/admin/city'
+      key:'/city'
   },
   {
       title:'订单管理',

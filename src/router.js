@@ -17,6 +17,7 @@ import FormRegister from './pages/form/register'
 import BasicTable from './pages/table/basicTable'
 import HighTable from './pages/table/highTable'
 import City from './pages/city'
+import Permission from './pages/permission'
 
 export default class IRouter extends Component {
   render() {
@@ -24,22 +25,23 @@ export default class IRouter extends Component {
       <HashRouter>
         <App>
           <Route path="/login" component={Login} />
-          <Route path="/admin" render={() => 
+          <Route path="/" render={() => 
             <Admin>
               <Switch>
-                <Route path="/admin/ui/buttons" component={Buttons} />
-                <Route path="/admin/ui/modals" component={Modals} />
-                <Route path="/admin/ui/loadings" component={Loadings} />
-                <Route path="/admin/ui/notification" component={Notice} />
-                <Route path="/admin/ui/messages" component={Messages} />
-                <Route path="/admin/ui/tabs" component={Tabs} />
-                <Route path="/admin/ui/gallery" component={Gallery} />
-                <Route path="/admin/ui/carousel" component={Carousel} />
-                <Route path="/admin/form/login" component={FormLogin} />
-                <Route path="/admin/form/register" component={FormRegister} />
-                <Route path="/admin/table/basic" component={BasicTable} />
-                <Route path="/admin/table/high" component={HighTable} />
-                <Route path="/admin/city" component={City} />
+                <Route path="/ui/buttons" component={Buttons} />
+                <Route path="/ui/modals" component={Modals} />
+                <Route path="/ui/loadings" component={Loadings} />
+                <Route path="/ui/notification" component={Notice} />
+                <Route path="/ui/messages" component={Messages} />
+                <Route path="/ui/tabs" component={Tabs} />
+                <Route path="/ui/gallery" component={Gallery} />
+                <Route path="/ui/carousel" component={Carousel} />
+                <Route path="/form/login" component={FormLogin} />
+                <Route path="/form/register" component={FormRegister} />
+                <Route path="/table/basic" component={BasicTable} />
+                <Route path="/table/high" component={HighTable} />
+                <Route path="/city" component={City} />
+                <Route path="/permission" component={Permission} />
                 <Route component={NoMatch} />
               </Switch>
             </Admin>
