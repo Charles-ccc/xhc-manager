@@ -139,6 +139,27 @@ export default class City extends Component {
       targetKeys
     })
   }
+  // 授权提交
+  handleUserSubmit = () => {
+    let data = {}
+    data.user_ids = this.state.targetKeys
+    data.role_id = this.state.selectedItem.id
+    axios.ajax({
+      url: '/role/user_role_edit',
+      data: {
+        params: {
+          ...data
+        }
+      }
+    }).then((res) => {
+      if(res) {
+        this.setState({
+          isUserVisible: false
+        })
+        axios.requestList(this, '/role/list', {}, true)
+      }
+    })
+  }
   render() {
     const columns = [
       {
@@ -201,7 +222,7 @@ export default class City extends Component {
         <Modal
           title="权限设置"
           visible={this.state.isPermVisible}
-          width={600}
+          width={800}
           onOk={this.handlePermEditSubmit}
           onCancel={() => {
             this.setState({
@@ -222,8 +243,8 @@ export default class City extends Component {
         <Modal
           title="用户授权"
           visible={this.state.isUserVisible}
-          width={600}
-          onOk={this.handleUSerSubmit}
+          width={800}
+          onOk={this.handleUserSubmit}
           onCancel={() => {
             this.setState({
               isUserVisible: false
@@ -234,6 +255,9 @@ export default class City extends Component {
               detailInfo={this.state.detailInfo}
               targetKeys={this.state.targetKeys}
               mockData={this.state.mockData}
+              patchMenuInfo={(targetKeys) => {
+                this.setState({targetKeys})
+              }}
             />
           </Modal>
       </div>
@@ -344,6 +368,13 @@ class RoleAuthForm extends Component {
   filterOption = (inputValue, option) => {
     return option.title.indexOf(inputValue) > -1
   }
+  onCheck = (checkedKeys) => {
+    this.props.patchMenuInfo(checkedKeys)
+  }
+  handleChange = (targetKeys) => {
+    // targetKeys 为右侧已选列表中的 key
+    this.props.patchMenuInfo(targetKeys)
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
@@ -357,14 +388,18 @@ class RoleAuthForm extends Component {
         <FormItem label="角色名称：" {...formItemLayout}>
           <Input disabled placeholder={detail_info.role_name} />
         </FormItem>
-        <Transfer
-          dataSource={this.props.mockData}
-          titles={['待选用户', '已选用户']}
-          showSearch
-          filterOption={this.filterOption}
-          targetKeys={this.props.targetKeys}
-          render={item=>item.title}
-        />
+        <FormItem label="选择用户：" {...formItemLayout}>
+          <Transfer
+            dataSource={this.props.mockData}
+            titles={['待选用户', '已选用户']}
+            showSearch
+            filterOption={this.filterOption}
+            targetKeys={this.props.targetKeys}
+            render={item=>item.title}
+            listStyle={{width:220, height:400}}
+            onChange={this.handleChange}
+          />
+        </FormItem>
       </Form>
     )
   }
