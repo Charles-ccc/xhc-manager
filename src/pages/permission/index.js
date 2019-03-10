@@ -85,6 +85,60 @@ export default class City extends Component {
       }
     })
   }
+
+  // 用户授权
+  handleUserAuth = () => {
+    const selectedItem = this.state.selectedItem
+    if (Object.keys(selectedItem).length <= 0) {
+      Modal.info({
+        title: '信息',
+        content: '请选择一个角色'
+      })
+      return
+    }
+    this.getRoleUserList(selectedItem.id)
+    this.setState({
+      isUserVisible: true,
+      isAuthClosed: false,
+      detailInfo: selectedItem
+    })
+  }
+  getRoleUserList = (id) => {
+    axios.ajax({
+      url: '/role/user_list',
+      data: {
+        params: {
+          id
+        }
+      }
+    }).then((res) => {
+      if(res) {
+        this.getAuthUserList(res.result)
+      }
+    })
+  }
+  // 筛选目标用户
+  getAuthUserList = (dataSource) => {
+    const mockData = []
+    const targetKeys = []
+    if (dataSource && dataSource.length > 0) {
+      for(let i=0; i < dataSource.length; i++) {
+        const data = {
+          key: dataSource[i].user_id,
+          title: dataSource[i].user_name,
+          status: dataSource[i].status
+        }
+        if(data.status === 1) {
+          targetKeys.push(data.key)
+        }
+        mockData.push(data)
+      }
+    }
+    this.setState({
+      mockData,
+      targetKeys
+    })
+  }
   render() {
     const columns = [
       {
@@ -165,6 +219,23 @@ export default class City extends Component {
             }}
           />
         </Modal>
+        <Modal
+          title="用户授权"
+          visible={this.state.isUserVisible}
+          width={600}
+          onOk={this.handleUSerSubmit}
+          onCancel={() => {
+            this.setState({
+              isUserVisible: false
+            })
+          }}>
+            <RoleAuthForm
+              wrappedComponentRef={(inst) => this.userAuthForm = inst}
+              detailInfo={this.state.detailInfo}
+              targetKeys={this.state.targetKeys}
+              mockData={this.state.mockData}
+            />
+          </Modal>
       </div>
     )
   }
@@ -231,7 +302,7 @@ class PermEditForm extends Component {
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
       labelCol: { span: 5 },
-      wrapperCol: { span: 18 }
+      wrapperCol: { span: 19 }
     };
     const detail_info = this.props.detailInfo;
     const menuInfo = this.props.menuInfo;
@@ -266,3 +337,37 @@ class PermEditForm extends Component {
 }
 
 PermEditForm = Form.create({})(PermEditForm)
+
+// 用户授权
+class RoleAuthForm extends Component {
+  state = {}
+  filterOption = (inputValue, option) => {
+    return option.title.indexOf(inputValue) > -1
+  }
+  render() {
+    const { getFieldDecorator } = this.props.form;
+    const formItemLayout = {
+      labelCol: { span: 5 },
+      wrapperCol: { span: 19 }
+    };
+    const detail_info = this.props.detailInfo;
+    const menuInfo = this.props.menuInfo;
+    return (
+      <Form layout="horizontal">
+        <FormItem label="角色名称：" {...formItemLayout}>
+          <Input disabled placeholder={detail_info.role_name} />
+        </FormItem>
+        <Transfer
+          dataSource={this.props.mockData}
+          titles={['待选用户', '已选用户']}
+          showSearch
+          filterOption={this.filterOption}
+          targetKeys={this.props.targetKeys}
+          render={item=>item.title}
+        />
+      </Form>
+    )
+  }
+}
+
+RoleAuthForm = Form.create({})(RoleAuthForm)
